@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>My first Game in Html5 and Javascript</title>
+</head>
+<body>
+    <canvas id="canvasView" width="600" height="600"></canvas>
+    <script type="text/javascript">
+        var canvas;
+        var canvasContext;
+        var RedX = 80;
+        var RedY = 50;
+        var speedX = 10;
+        var speedY = 5;
+        var speedY2 = 6;
+        var paddle2Y;
+        var gamefinished=0;
+        var framesPerSecond = 30;
+        var newX,newY,oldX=0,oldY=0;
+        window.onload = function()
+        {
+            canvas = document.getElementById('canvasView');
+            canvasContext = canvas.getContext('2d');
+            setInterval(draw,1000/framesPerSecond);
+            paddle2Y = canvas.height/2;
+            canvas.addEventListener("mousemove",function(e)
+            {
+              //var rect = canvas.getBoundingClientRect();
+              //var root = document.documentElement
+              newX = e.clientX ;//- rect.left-root.scrollLeft;
+              newY = e.clientY ;//- rect.top-root.scrollRight;
+            });
+        }
+
+        function Ai()
+        {
+            if(RedY>paddle2Y) paddle2Y = paddle2Y +speedY2;
+            else paddle2Y = paddle2Y - speedY2;
+        }
+
+        function collision()
+        {
+            if(RedX==20&&RedY>=newY-25&&RedY<=newY+25)
+            {
+                speedY = 0.25*(RedY-newY);
+            }
+        }
+
+        function draw()
+        {
+            console.log("Hello World");
+            RedX = RedX+speedX;
+            RedY = RedY+speedY;
+
+            //if(gamefinished==1)
+            //{
+              //  canvasContext.fillStyle = "Black";
+                //canvasContext.fillRect(0,0,canvas.width,canvas.height);
+                //return;
+             //}   
+            //SpeedX
+            if(RedX>canvas.width) speedX=-speedX;
+            if(RedX<=20) speedX=-speedX;
+            
+            //SpeedY
+            if(RedY>canvas.height) {speedY=-speedY;}
+            if(RedY<0) {speedY=-speedY;}
+            
+            //Background
+            canvasContext.fillStyle = "Black";
+            canvasContext.fillRect(0,0,canvas.width,canvas.height);
+            
+            //UserPaddle
+            canvasContext.fillStyle = "White";
+            canvasContext.fillRect(0,newY-25,20,50);
+            
+            //AIPaddle
+            Ai();
+            canvasContext.fillStyle = "White";
+            canvasContext.fillRect(canvas.width-20,paddle2Y,20,50);
+            
+            //Ball
+            collision();
+            canvasContext.fillStyle = "Red";
+            canvasContext.beginPath();
+            canvasContext.arc(RedX,RedY,10,0,Math.PI*2,true);
+            canvasContext.fill();
+        }
+       </script>
+</body>
+</html>
